@@ -2,11 +2,9 @@ import random
 import matplotlib.pyplot as plt
 
 def roll_dice():
-    """Генерує випадкові числа для двох кубиків і повертає їх суму."""
     return random.randint(1, 6) + random.randint(1, 6)
 
 def monte_carlo_simulation(num_rolls):
-    """Імітує кидання кубиків num_rolls разів і повертає ймовірності кожної суми."""
     sum_counts = {i: 0 for i in range(2, 13)}
     
     for _ in range(num_rolls):
@@ -17,7 +15,6 @@ def monte_carlo_simulation(num_rolls):
     return probabilities
 
 def plot_probabilities(probabilities):
-    """Будує графік ймовірностей для кожної суми."""
     sums = list(probabilities.keys())
     probs = list(probabilities.values())
     
@@ -30,7 +27,7 @@ def plot_probabilities(probabilities):
     plt.show()
 
 def main():
-    num_rolls = 100000  # Велика кількість кидків для точності
+    num_rolls = 100000  
     probabilities = monte_carlo_simulation(num_rolls)
     plot_probabilities(probabilities)
     
@@ -42,11 +39,12 @@ def main():
     
     print("Симуляційні ймовірності:")
     for s in range(2, 13):
-        print(f"Сума {s}: {probabilities[s]:.4f}")
+        print(f"Сума {s}: {probabilities[s] * 100:.2f}%")
 
     print("\nАналітичні ймовірності:")
     for s in range(2, 13):
-        print(f"Сума {s}: {analytical_probabilities[s]:.4f}")
+        print(f"Сума {s}: {analytical_probabilities[s] * 100:.2f}%")
+
 
 if __name__ == "__main__":
     main()

@@ -1,136 +1,165 @@
-# Реверсування однозв'язного списку
-
 class Node:
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, data=None):
+        self.data = data
         self.next = None
 
-def reverse_linked_list(head):
-    prev = None
-    current = head
-    while current is not None:
-        next_node = current.next
-        current.next = prev
-        prev = current
-        current = next_node
-    head = prev
-    return head
+class LinkedList:
+    def __init__(self):
+        self.head = None
 
-def print_list(head):
-    current = head
-    while current:
-        print(current.value, end=' -> ')
-        current = current.next
-    print('None')
+    def append(self, data):
+        new_node = Node(data)
+        if self.head is None:
+            self.head = new_node
+            return
+        last_node = self.head
+        while last_node.next:
+            last_node = last_node.next
+        last_node.next = new_node
 
-head = Node(1)
-head.next = Node(2)
-head.next.next = Node(3)
-head.next.next.next = Node(4)
+    def prepend(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
 
-print("Оригінальний список:")
-print_list(head)
-
-head = reverse_linked_list(head)
-
-print("Реверсований список:")
-print_list(head)
-
-# Сортування однозв'язного списку
-
-def merge_sort(head):
-    if head is None or head.next is None:
-        return head
+    def print_list(self):
+        current_node = self.head
+        while current_node:
+            print(current_node.data, end=" ")
+            current_node = current_node.next
+        print("\n")
     
-    middle = get_middle(head)
-    next_to_middle = middle.next
-    middle.next = None
-    
-    left = merge_sort(head)
-    right = merge_sort(next_to_middle)
-    
-    sorted_list = merge(left, right)
-    return sorted_list
+    def reverse(self):
+        prev = None
+        current = self.head
+        while current is not None:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+        self.head = prev
 
-def get_middle(head):
-    if head is None:
-        return head
+    def merge_sort(self):
+        if self.head is None or self.head.next is None:
+            return self.head
+        
+        middle = self.get_middle(self.head)
+        next_to_middle = middle.next
+        middle.next = None
+        
+        left = self.merge_sort_recursive(self.head)
+        right = self.merge_sort_recursive(next_to_middle)
+        
+        sorted_list = self.sorted_merge(left, right)
+        self.head = sorted_list
     
-    slow = head
-    fast = head
+    def merge_sort_recursive(self, h):
+        if h is None or h.next is None:
+            return h
+        
+        middle = self.get_middle(h)
+        next_to_middle = middle.next
+        middle.next = None
+        
+        left = self.merge_sort_recursive(h)
+        right = self.merge_sort_recursive(next_to_middle)
+        
+        sorted_list = self.sorted_merge(left, right)
+        return sorted_list
     
-    while fast.next is not None and fast.next.next is not None:
-        slow = slow.next
-        fast = fast.next.next
+    def get_middle(self, head):
+        if head is None:
+            return head
+        
+        slow = head
+        fast = head
+        
+        while fast.next is not None and fast.next.next is not None:
+            slow = slow.next
+            fast = fast.next.next
+        
+        return slow
     
-    return slow
-
-def merge(left, right):
-    if left is None:
-        return right
-    if right is None:
-        return left
-    
-    if left.value < right.value:
-        result = left
-        result.next = merge(left.next, right)
-    else:
-        result = right
-        result.next = merge(left, right.next)
-    
-    return result
-
-# Тестування сортування
-head = Node(4)
-head.next = Node(2)
-head.next.next = Node(1)
-head.next.next.next = Node(3)
-
-print("Оригінальний список:")
-print_list(head)
-
-head = merge_sort(head)
-
-print("Відсортований список:")
-print_list(head)
-
-# Об'єднання двох відсортованих однозв'язних списків
-
-def merge_two_sorted_lists(l1, l2):
-    dummy = Node(0)
-    tail = dummy
-    
-    while l1 is not None and l2 is not None:
-        if l1.value < l2.value:
-            tail.next = l1
-            l1 = l1.next
+    def sorted_merge(self, a, b):
+        if a is None:
+            return b
+        if b is None:
+            return a
+        
+        if a.data <= b.data:
+            result = a
+            result.next = self.sorted_merge(a.next, b)
         else:
-            tail.next = l2
-            l2 = l2.next
+            result = b
+            result.next = self.sorted_merge(a, b.next)
+        
+        return result
+    
+def merge_sorted_lists(list1, list2):
+    dummy = Node()
+    tail = dummy
+
+    current1 = list1.head
+    current2 = list2.head
+
+    while current1 is not None and current2 is not None:
+        if current1.data <= current2.data:
+            tail.next = current1
+            current1 = current1.next
+        else:
+            tail.next = current2
+            current2 = current2.next
         tail = tail.next
+
+    if current1 is not None:
+        tail.next = current1
+    else:
+        tail.next = current2
+
+    merged_list = LinkedList()
+    merged_list.head = dummy.next
+    return merged_list
     
-    if l1 is not None:
-        tail.next = l1
-    if l2 is not None:
-        tail.next = l2
-    
-    return dummy.next
 
-# Тестування об'єднання двох відсортованих списків
-head1 = Node(1)
-head1.next = Node(3)
-head1.next.next = Node(5)
+# Приклад використання:
+linked_list = LinkedList()
+linked_list.append(3)
+linked_list.append(9)
+linked_list.append(4)
+linked_list.prepend(8)
+linked_list.prepend(1)
 
-head2 = Node(2)
-head2.next = Node(4)
-head2.next.next = Node(6)
+linked_list_2 = LinkedList()
+linked_list_2.append(6)
+linked_list_2.append(2)
+linked_list_2.append(7)
+linked_list_2.prepend(5)
+linked_list_2.prepend(10)
 
+print("Зв'язний список 1:")
+linked_list.print_list()
+
+print("Зв'язний список 2:")
+linked_list_2.print_list()
+
+print("Списки після реверсування:")
 print("Список 1:")
-print_list(head1)
+linked_list.reverse()
+linked_list.print_list()
 print("Список 2:")
-print_list(head2)
+linked_list_2.reverse()
+linked_list_2.print_list()
 
-merged_head = merge_two_sorted_lists(head1, head2)
+print("Сортування злиттям:")
+print("Список 1:")
+linked_list.merge_sort()
+linked_list.print_list()
+print("Список 2:")
+linked_list_2.merge_sort()
+linked_list_2.print_list()
 
-print("Об'єднаний список:")
-print_list(merged_head)
+print("Об'єднаний відсортований список:")
+merged_list = merge_sorted_lists(linked_list,linked_list_2)
+merged_list.print_list()
+
+

@@ -18,18 +18,6 @@ def greedy_algorithm(items, budget):
     
     return selected_items
 
-items = {
-    "pizza": {"cost": 50, "calories": 300},
-    "hamburger": {"cost": 40, "calories": 250},
-    "hot-dog": {"cost": 30, "calories": 200},
-    "pepsi": {"cost": 10, "calories": 100},
-    "cola": {"cost": 15, "calories": 220},
-    "potato": {"cost": 25, "calories": 350}
-}
-
-budget = 100
-print("Жадібний алгоритм:", greedy_algorithm(items, budget))
-
 def dynamic_programming(items, budget):
     dp = [0] * (budget + 1)
     item_choice = [[0] * (budget + 1) for _ in range(len(items))]
@@ -54,4 +42,17 @@ def dynamic_programming(items, budget):
     
     return selected_items
 
+items = {
+    "pizza": {"cost": 50, "calories": 300},
+    "hamburger": {"cost": 40, "calories": 250},
+    "hot-dog": {"cost": 30, "calories": 200},
+    "pepsi": {"cost": 10, "calories": 100},
+    "cola": {"cost": 15, "calories": 220},
+    "potato": {"cost": 25, "calories": 350}
+}
+
+# Приклад використання
+budget = 79
+
+print("Жадібний алгоритм:", greedy_algorithm(items, budget))
 print("Динамічне програмування:", dynamic_programming(items, budget))

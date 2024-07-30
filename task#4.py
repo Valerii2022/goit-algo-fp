@@ -37,11 +37,12 @@ def draw_heap(heap_root):
     plt.title("Бінарна купа")
     plt.show()
 
-root = Node(10)
-root.left = Node(5)
-root.right = Node(3)
-root.left.left = Node(1)
-root.left.right = Node(4)
-root.right.left = Node(2)
+# Приклад використання
+root = Node(0)
+root.left = Node(4)
+root.left.left = Node(5)
+root.left.right = Node(10)
+root.right = Node(1)
+root.right.left = Node(3)
 
 draw_heap(root)
