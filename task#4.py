@@ -9,6 +9,7 @@ class Node:
         self.val = key
         self.color = color
         self.id = str(uuid.uuid4()) 
+        
 def add_edges(graph, node, pos, x=0, y=0, layer=1):
     if node is not None:
         graph.add_node(node.id, color=node.color, label=node.val) 
