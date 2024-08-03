@@ -1,15 +1,16 @@
 import uuid
 import networkx as nx
 import matplotlib.pyplot as plt
+import heapq
 
 class Node:
     def __init__(self, key, color="skyblue"):
         self.left = None
         self.right = None
         self.val = key
-        self.color = color
+        self.color = color 
         self.id = str(uuid.uuid4()) 
-        
+
 def add_edges(graph, node, pos, x=0, y=0, layer=1):
     if node is not None:
         graph.add_node(node.id, color=node.color, label=node.val) 
@@ -25,25 +26,46 @@ def add_edges(graph, node, pos, x=0, y=0, layer=1):
             r = add_edges(graph, node.right, pos, x=r, y=y - 1, layer=layer + 1)
     return graph
 
-def draw_heap(heap_root):
-    heap = nx.DiGraph()
-    pos = {heap_root.id: (0, 0)}
-    heap = add_edges(heap, heap_root, pos)
-
-    colors = [node[1]['color'] for node in heap.nodes(data=True)]
-    labels = {node[0]: node[1]['label'] for node in heap.nodes(data=True)}  
-
+def draw_tree(tree_root):
+    tree = nx.DiGraph()
+    pos = {tree_root.id: (0, 0)}
+    tree = add_edges(tree, tree_root, pos)
+    colors = [node[1]['color'] for node in tree.nodes(data=True)]
+    labels = {node[0]: node[1]['label'] for node in tree.nodes(data=True)} 
     plt.figure(figsize=(8, 5))
-    nx.draw(heap, pos=pos, labels=labels, arrows=False, node_size=2500, node_color=colors)
-    plt.title("Бінарна купа")
+    nx.draw(tree, pos=pos, labels=labels, arrows=False, node_size=2500, node_color=colors)
     plt.show()
 
-# Приклад використання
-root = Node(0)
-root.left = Node(4)
-root.left.left = Node(5)
-root.left.right = Node(10)
-root.right = Node(1)
-root.right.left = Node(3)
+def list_to_heap(lst):
+    heapq.heapify(lst)
+    return lst
 
-draw_heap(root)
+def heap_to_tree(heap):
+    if not heap:
+        return None
+
+    nodes = [Node(val) for val in heap]
+
+    for i in range(len(nodes)):
+        left_index = 2 * i + 1
+        right_index = 2 * i + 2
+
+        if left_index < len(nodes):
+            nodes[i].left = nodes[left_index]
+        if right_index < len(nodes):
+            nodes[i].right = nodes[right_index]
+
+    return nodes[0]
+
+# Приклад списку
+lst = [7, 10, 4, 3, 20, 15]
+
+# Перетворення списку в купу
+heap = list_to_heap(lst)
+
+# Перетворення купи в дерево
+root = heap_to_tree(heap)
+
+# Відображення дерева
+draw_tree(root)
+
